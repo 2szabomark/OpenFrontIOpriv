@@ -3,6 +3,7 @@ import { AbstractGraph } from "../pathfinding/algorithms/AbstractGraph";
 import { PathFinder } from "../pathfinding/types";
 import { AllPlayersStats, ClientID } from "../Schemas";
 import { getClanTag } from "../Util";
+import { CentralBank } from "./CentralBank";
 import { GameMap, TileRef } from "./GameMap";
 import {
   GameUpdate,
@@ -848,6 +849,7 @@ export interface Game extends GameMap {
   market(): Market;
   stockMarket(): StockMarket;
   contractManager(): ContractManager;
+  centralBank(): CentralBank;
 
   addUpdate(update: GameUpdate): void;
   railNetwork(): RailNetwork;

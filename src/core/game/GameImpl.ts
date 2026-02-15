@@ -39,6 +39,8 @@ import {
   UnitInfo,
   UnitType,
 } from "./Game";
+import { CentralBank } from "./CentralBank";
+import { CentralBankImpl } from "./CentralBankImpl";
 import { ContractManager } from "./Contract";
 import { ContractManagerImpl } from "./ContractManagerImpl";
 import { GameMap, TileRef, TileUpdate } from "./GameMap";
@@ -97,6 +99,7 @@ export class GameImpl implements Game {
   private _market: Market;
   private _stockMarket: StockMarket;
   private _contractManager: ContractManager;
+  private _centralBank: CentralBank;
 
   // Used to assign unique IDs to each new alliance
   private nextAllianceID: number = 0;
@@ -123,6 +126,7 @@ export class GameImpl implements Game {
     this._market = new MarketImpl(simpleHash(_config.serverConfig().gitCommit()));
     this._stockMarket = new StockMarketImpl(this);
     this._contractManager = new ContractManagerImpl();
+    this._centralBank = new CentralBankImpl(this);
 
     if (_config.gameConfig().gameMode === GameMode.Team) {
       this.populateTeams();
@@ -1047,6 +1051,9 @@ export class GameImpl implements Game {
   }
   contractManager(): ContractManager {
     return this._contractManager;
+  }
+  centralBank(): CentralBank {
+    return this._centralBank;
   }
   railNetwork(): RailNetwork {
     return this._railNetwork;
