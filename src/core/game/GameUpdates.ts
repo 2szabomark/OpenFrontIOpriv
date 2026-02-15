@@ -52,6 +52,10 @@ export enum GameUpdateType {
   ConquestEvent,
   EmbargoEvent,
   GamePaused,
+  MarketUpdate,
+  InvestmentUpdate,
+  ContractUpdate,
+  LoanUpdate,
 }
 
 export type GameUpdate =
@@ -76,7 +80,11 @@ export type GameUpdate =
   | RailroadSnapUpdate
   | ConquestUpdate
   | EmbargoUpdate
-  | GamePausedUpdate;
+  | GamePausedUpdate
+  | MarketUpdate
+  | InvestmentUpdate
+  | ContractUpdate
+  | LoanUpdate;
 
 export interface BonusEventUpdate {
   type: GameUpdateType.BonusEvent;
@@ -285,4 +293,76 @@ export interface EmbargoUpdate {
 export interface GamePausedUpdate {
   type: GameUpdateType.GamePaused;
   paused: boolean;
+}
+
+export interface MarketPriceData {
+  resource: string;
+  price: number;
+  supply: number;
+  demand: number;
+}
+
+export interface MarketUpdate {
+  type: GameUpdateType.MarketUpdate;
+  prices: MarketPriceData[];
+  lastEvent?: {
+    resource: string;
+    eventType: "shortage" | "boom";
+    multiplier: number;
+  };
+}
+
+export interface InvestmentData {
+  id: number;
+  investorID: PlayerID;
+  targetID: PlayerID;
+  principal: bigint;
+  createdAtTick: Tick;
+  currentValue: bigint;
+  returns: bigint;
+}
+
+export interface InvestmentUpdate {
+  type: GameUpdateType.InvestmentUpdate;
+  playerID: PlayerID;
+  investments: InvestmentData[];
+  dividendsPaid?: bigint;
+}
+
+export interface ContractData {
+  id: number;
+  party1ID: PlayerID;
+  party2ID: PlayerID;
+  contractType: string;
+  createdAtTick: Tick;
+  expiresAtTick: Tick;
+  upfrontPayment: bigint;
+  periodicPayment: bigint;
+  periodicPaymentInterval: number;
+  isActive: boolean;
+}
+
+export interface ContractUpdate {
+  type: GameUpdateType.ContractUpdate;
+  playerID: PlayerID;
+  contracts: ContractData[];
+}
+
+export interface LoanData {
+  id: number;
+  borrowerID: PlayerID;
+  principal: bigint;
+  remainingBalance: bigint;
+  interestRate: number;
+  createdAtTick: Tick;
+  missedPayments: number;
+  isDefaulted: boolean;
+}
+
+export interface LoanUpdate {
+  type: GameUpdateType.LoanUpdate;
+  playerID: PlayerID;
+  loans: LoanData[];
+  currentInterestRate: number;
+  maxLoanAmount: bigint;
 }

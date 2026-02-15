@@ -33,6 +33,9 @@ export interface Market {
 
   // Get all market data for UI
   getAllMarketData(): MarketPrice[];
+
+  // Get current market event
+  getCurrentEvent(): MarketEvent | null;
 }
 
 export interface MarketUpdate {
