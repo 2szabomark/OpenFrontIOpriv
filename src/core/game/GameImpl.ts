@@ -39,6 +39,8 @@ import {
   UnitInfo,
   UnitType,
 } from "./Game";
+import { ContractManager } from "./Contract";
+import { ContractManagerImpl } from "./ContractManagerImpl";
 import { GameMap, TileRef, TileUpdate } from "./GameMap";
 import { GameUpdate, GameUpdateType } from "./GameUpdates";
 import { StockMarket } from "./Investment";
@@ -94,6 +96,7 @@ export class GameImpl implements Game {
   private _railNetwork: RailNetwork = createRailNetwork(this);
   private _market: Market;
   private _stockMarket: StockMarket;
+  private _contractManager: ContractManager;
 
   // Used to assign unique IDs to each new alliance
   private nextAllianceID: number = 0;
@@ -119,6 +122,7 @@ export class GameImpl implements Game {
     this.unitGrid = new UnitGrid(this._map);
     this._market = new MarketImpl(simpleHash(_config.serverConfig().gitCommit()));
     this._stockMarket = new StockMarketImpl(this);
+    this._contractManager = new ContractManagerImpl();
 
     if (_config.gameConfig().gameMode === GameMode.Team) {
       this.populateTeams();
@@ -1040,6 +1044,9 @@ export class GameImpl implements Game {
   }
   stockMarket(): StockMarket {
     return this._stockMarket;
+  }
+  contractManager(): ContractManager {
+    return this._contractManager;
   }
   railNetwork(): RailNetwork {
     return this._railNetwork;

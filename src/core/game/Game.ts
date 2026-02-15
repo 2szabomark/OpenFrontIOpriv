@@ -10,6 +10,7 @@ import {
   PlayerUpdate,
   UnitUpdate,
 } from "./GameUpdates";
+import { ContractManager } from "./Contract";
 import { StockMarket } from "./Investment";
 import { Market } from "./Market";
 import { RailNetwork } from "./RailNetwork";
@@ -846,6 +847,7 @@ export interface Game extends GameMap {
   stats(): Stats;
   market(): Market;
   stockMarket(): StockMarket;
+  contractManager(): ContractManager;
 
   addUpdate(update: GameUpdate): void;
   railNetwork(): RailNetwork;
