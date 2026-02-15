@@ -51,7 +51,13 @@ export type Intent =
   | DeleteUnitIntent
   | KickPlayerIntent
   | TogglePauseIntent
-  | UpdateGameConfigIntent;
+  | UpdateGameConfigIntent
+  | BuyResourceIntent
+  | SellResourceIntent
+  | InvestIntent
+  | LiquidateInvestmentIntent
+  | CreateContractIntent
+  | RequestLoanIntent;
 
 export type AttackIntent = z.infer<typeof AttackIntentSchema>;
 export type CancelAttackIntent = z.infer<typeof CancelAttackIntentSchema>;
@@ -87,6 +93,12 @@ export type TogglePauseIntent = z.infer<typeof TogglePauseIntentSchema>;
 export type UpdateGameConfigIntent = z.infer<
   typeof UpdateGameConfigIntentSchema
 >;
+export type BuyResourceIntent = z.infer<typeof BuyResourceIntentSchema>;
+export type SellResourceIntent = z.infer<typeof SellResourceIntentSchema>;
+export type InvestIntent = z.infer<typeof InvestIntentSchema>;
+export type LiquidateInvestmentIntent = z.infer<typeof LiquidateInvestmentIntentSchema>;
+export type CreateContractIntent = z.infer<typeof CreateContractIntentSchema>;
+export type RequestLoanIntent = z.infer<typeof RequestLoanIntentSchema>;
 
 export type Turn = z.infer<typeof TurnSchema>;
 export type GameConfig = z.infer<typeof GameConfigSchema>;
@@ -423,6 +435,47 @@ export const UpdateGameConfigIntentSchema = z.object({
   config: GameConfigSchema.partial(),
 });
 
+export const BuyResourceIntentSchema = z.object({
+  type: z.literal("buy_resource"),
+  resource: z.enum(["Food", "Oil"]),
+  amount: z.number().positive(),
+});
+
+export const SellResourceIntentSchema = z.object({
+  type: z.literal("sell_resource"),
+  resource: z.enum(["Food", "Oil"]),
+  amount: z.number().positive(),
+});
+
+export const InvestIntentSchema = z.object({
+  type: z.literal("invest"),
+  targetID: ID,
+  amount: z.number().positive(),
+});
+
+export const LiquidateInvestmentIntentSchema = z.object({
+  type: z.literal("liquidate_investment"),
+  investmentID: z.number(),
+});
+
+export const CreateContractIntentSchema = z.object({
+  type: z.literal("create_contract"),
+  party2ID: ID,
+  contractType: z.enum(["Trade", "Non-Aggression", "Resource Lease", "Protection"]),
+  goldPayment: z.number().nonnegative(),
+  periodicPayment: z.number().nonnegative().optional(),
+  duration: z.number().positive(),
+  foodPerTick: z.number().nonnegative().optional(),
+  oilPerTick: z.number().nonnegative().optional(),
+  allowRailroadUse: z.boolean().optional(),
+  allowPortUse: z.boolean().optional(),
+});
+
+export const RequestLoanIntentSchema = z.object({
+  type: z.literal("request_loan"),
+  amount: z.number().positive(),
+});
+
 const IntentSchema = z.discriminatedUnion("type", [
   AttackIntentSchema,
   CancelAttackIntentSchema,
@@ -448,6 +501,12 @@ const IntentSchema = z.discriminatedUnion("type", [
   KickPlayerIntentSchema,
   TogglePauseIntentSchema,
   UpdateGameConfigIntentSchema,
+  BuyResourceIntentSchema,
+  SellResourceIntentSchema,
+  InvestIntentSchema,
+  LiquidateInvestmentIntentSchema,
+  CreateContractIntentSchema,
+  RequestLoanIntentSchema,
 ]);
 
 // StampedIntent = Intent with server-stamped clientID (used in turns and execution)

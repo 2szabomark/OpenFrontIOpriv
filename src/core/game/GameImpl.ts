@@ -1,5 +1,9 @@
 import { renderNumber } from "../../client/Utils";
 import { Config } from "../configuration/Config";
+import { CentralBankExecution } from "../execution/CentralBankExecution";
+import { ContractExecution } from "../execution/ContractExecution";
+import { MarketExecution } from "../execution/MarketExecution";
+import { StockMarketExecution } from "../execution/StockMarketExecution";
 import {
   AbstractGraph,
   AbstractGraphBuilder,
@@ -143,6 +147,12 @@ export class GameImpl implements Game {
         { cachePaths: true },
       );
     }
+
+    // Initialize global economic system executions
+    this.addExecution(new MarketExecution());
+    this.addExecution(new StockMarketExecution());
+    this.addExecution(new CentralBankExecution());
+    this.addExecution(new ContractExecution());
 
     console.log(
       `[GameImpl] Constructor total: ${(performance.now() - constructorStart).toFixed(0)}ms`,

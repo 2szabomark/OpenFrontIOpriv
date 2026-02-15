@@ -9,7 +9,13 @@ import { BreakAllianceExecution } from "./alliance/BreakAllianceExecution";
 import { AttackExecution } from "./AttackExecution";
 import { BoatRetreatExecution } from "./BoatRetreatExecution";
 import { BotSpawner } from "./BotSpawner";
+import { BuyResourceExecution } from "./BuyResourceExecution";
 import { ConstructionExecution } from "./ConstructionExecution";
+import { CreateContractExecution } from "./CreateContractExecution";
+import { InvestExecution } from "./InvestExecution";
+import { LiquidateInvestmentExecution } from "./LiquidateInvestmentExecution";
+import { RequestLoanExecution } from "./RequestLoanExecution";
+import { SellResourceExecution } from "./SellResourceExecution";
 import { DeleteUnitExecution } from "./DeleteUnitExecution";
 import { DonateGoldExecution } from "./DonateGoldExecution";
 import { DonateTroopsExecution } from "./DonateTroopExecution";
@@ -125,6 +131,37 @@ export class Executor {
         return new MarkDisconnectedExecution(player, intent.isDisconnected);
       case "toggle_pause":
         return new PauseExecution(player, intent.paused);
+      case "buy_resource":
+        return new BuyResourceExecution(
+          player,
+          intent.resource as "Food" | "Oil",
+          intent.amount,
+        );
+      case "sell_resource":
+        return new SellResourceExecution(
+          player,
+          intent.resource as "Food" | "Oil",
+          intent.amount,
+        );
+      case "invest":
+        return new InvestExecution(player, intent.targetID, BigInt(intent.amount));
+      case "liquidate_investment":
+        return new LiquidateInvestmentExecution(player, intent.investmentID);
+      case "create_contract":
+        return new CreateContractExecution(player, intent.party2ID, {
+          type: intent.contractType as any,
+          goldPayment: BigInt(intent.goldPayment),
+          periodicPayment: intent.periodicPayment
+            ? BigInt(intent.periodicPayment)
+            : undefined,
+          duration: intent.duration,
+          foodPerTick: intent.foodPerTick,
+          oilPerTick: intent.oilPerTick,
+          allowRailroadUse: intent.allowRailroadUse,
+          allowPortUse: intent.allowPortUse,
+        });
+      case "request_loan":
+        return new RequestLoanExecution(player, BigInt(intent.amount));
       default:
         throw new Error(`intent type ${intent} not found`);
     }
