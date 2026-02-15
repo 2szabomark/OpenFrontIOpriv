@@ -41,6 +41,8 @@ import {
 } from "./Game";
 import { GameMap, TileRef, TileUpdate } from "./GameMap";
 import { GameUpdate, GameUpdateType } from "./GameUpdates";
+import { Market } from "./Market";
+import { MarketImpl } from "./MarketImpl";
 import { PlayerImpl } from "./PlayerImpl";
 import { RailNetwork } from "./RailNetwork";
 import { createRailNetwork } from "./RailNetworkImpl";
@@ -88,6 +90,7 @@ export class GameImpl implements Game {
   private playerTeams: Team[];
   private botTeam: Team = ColoredTeams.Bot;
   private _railNetwork: RailNetwork = createRailNetwork(this);
+  private _market: Market;
 
   // Used to assign unique IDs to each new alliance
   private nextAllianceID: number = 0;
@@ -111,6 +114,7 @@ export class GameImpl implements Game {
     this._width = _map.width();
     this._height = _map.height();
     this.unitGrid = new UnitGrid(this._map);
+    this._market = new MarketImpl(simpleHash(_config.serverConfig().gitCommit()));
 
     if (_config.gameConfig().gameMode === GameMode.Team) {
       this.populateTeams();
@@ -1026,6 +1030,9 @@ export class GameImpl implements Game {
   }
   stats(): Stats {
     return this._stats;
+  }
+  market(): Market {
+    return this._market;
   }
   railNetwork(): RailNetwork {
     return this._railNetwork;

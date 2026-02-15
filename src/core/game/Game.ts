@@ -10,6 +10,7 @@ import {
   PlayerUpdate,
   UnitUpdate,
 } from "./GameUpdates";
+import { Market } from "./Market";
 import { RailNetwork } from "./RailNetwork";
 import { Stats } from "./Stats";
 import { UnitPredicate } from "./UnitGrid";
@@ -842,6 +843,7 @@ export interface Game extends GameMap {
 
   numTilesWithFallout(): number;
   stats(): Stats;
+  market(): Market;
 
   addUpdate(update: GameUpdate): void;
   railNetwork(): RailNetwork;
