@@ -851,6 +851,36 @@ export class DefaultConfig implements Config {
     return BigInt(Math.floor(Number(baseRate) * multiplier));
   }
 
+  foodSpeedModifier(food: number): number {
+    // Food affects troop generation speed
+    // No food = 0.5x speed (slow growth)
+    // 10 food = 1.0x speed (normal growth)
+    // 20+ food = 1.5x speed (fast growth)
+    if (food <= 0) {
+      return 0.5; // Slow generation without food
+    }
+    if (food >= 20) {
+      return 1.5; // Max speed with lots of food
+    }
+    // Linear interpolation between 0.5x and 1.5x
+    return 0.5 + (food / 20) * 1.0;
+  }
+
+  oilSpeedModifier(oil: number): number {
+    // Oil affects movement speed of trains and boats
+    // No oil = 0.5x speed (slow movement)
+    // 10 oil = 1.0x speed (normal movement)
+    // 20+ oil = 1.5x speed (fast movement)
+    if (oil <= 0) {
+      return 0.5; // Slow movement without oil
+    }
+    if (oil >= 20) {
+      return 1.5; // Max speed with lots of oil
+    }
+    // Linear interpolation between 0.5x and 1.5x
+    return 0.5 + (oil / 20) * 1.0;
+  }
+
   nukeMagnitudes(unitType: UnitType): NukeMagnitude {
     switch (unitType) {
       case UnitType.MIRVWarhead:

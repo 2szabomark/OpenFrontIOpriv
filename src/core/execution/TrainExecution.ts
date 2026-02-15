@@ -75,6 +75,12 @@ export class TrainExecution implements Execution {
       return;
     }
 
+    // Apply oil speed modifier to train movement
+    if (this.mg) {
+      const oilModifier = this.mg.config().oilSpeedModifier(this.player.oil());
+      this.speed = Math.max(1, Math.floor(2 * oilModifier)); // Base speed 2, modified by oil
+    }
+
     const tile = this.getNextTile();
     if (tile) {
       this.updateCarsPositions(tile);

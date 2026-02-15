@@ -175,7 +175,11 @@ export class WarshipExecution implements Execution {
   }
 
   private huntDownTradeShip() {
-    for (let i = 0; i < 2; i++) {
+    // Apply oil speed modifier - more oil = more movement per tick
+    const oilModifier = this.mg.config().oilSpeedModifier(this.warship.owner().oil());
+    const movesPerTick = Math.max(1, Math.floor(2 * oilModifier));
+
+    for (let i = 0; i < movesPerTick; i++) {
       // target is trade ship so capture it.
       const result = this.pathfinder.next(
         this.warship.tile(),
@@ -210,24 +214,30 @@ export class WarshipExecution implements Execution {
       }
     }
 
-    const result = this.pathfinder.next(
-      this.warship.tile(),
-      this.warship.targetTile()!,
-    );
-    switch (result.status) {
-      case PathStatus.COMPLETE:
-        this.warship.setTargetTile(undefined);
-        this.warship.move(result.node);
-        break;
-      case PathStatus.NEXT:
-        this.warship.move(result.node);
-        break;
-      case PathStatus.PENDING:
-        this.warship.touch();
-        return;
-      case PathStatus.NOT_FOUND: {
-        console.log(`path not found to target`);
-        break;
+    // Apply oil speed modifier for patrol movement
+    const oilModifier = this.mg.config().oilSpeedModifier(this.warship.owner().oil());
+    const movesPerTick = Math.max(1, Math.floor(1 * oilModifier));
+
+    for (let i = 0; i < movesPerTick; i++) {
+      const result = this.pathfinder.next(
+        this.warship.tile(),
+        this.warship.targetTile()!,
+      );
+      switch (result.status) {
+        case PathStatus.COMPLETE:
+          this.warship.setTargetTile(undefined);
+          this.warship.move(result.node);
+          break;
+        case PathStatus.NEXT:
+          this.warship.move(result.node);
+          break;
+        case PathStatus.PENDING:
+          this.warship.touch();
+          return;
+        case PathStatus.NOT_FOUND: {
+          console.log(`path not found to target`);
+          break;
+        }
       }
     }
   }

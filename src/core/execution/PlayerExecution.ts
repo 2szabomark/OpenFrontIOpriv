@@ -66,7 +66,9 @@ export class PlayerExecution implements Execution {
       return;
     }
 
-    const troopInc = this.config.troopIncreaseRate(this.player);
+    const baseTroopInc = this.config.troopIncreaseRate(this.player);
+    const foodModifier = this.config.foodSpeedModifier(this.player.food());
+    const troopInc = baseTroopInc * foodModifier;
     this.player.addTroops(troopInc);
     const goldFromWorkers = this.config.goldAdditionRate(this.player);
     this.player.addGold(goldFromWorkers);

@@ -83,6 +83,8 @@ export interface Config {
   startManpower(playerInfo: PlayerInfo): number;
   troopIncreaseRate(player: Player | PlayerView): number;
   goldAdditionRate(player: Player | PlayerView): Gold;
+  foodSpeedModifier(food: number): number;
+  oilSpeedModifier(oil: number): number;
   attackTilesPerTick(
     attckTroops: number,
     attacker: Player,

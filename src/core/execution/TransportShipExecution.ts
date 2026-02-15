@@ -138,7 +138,11 @@ export class TransportShipExecution implements Execution {
       this.active = false;
       return;
     }
-    if (ticks - this.lastMove < this.ticksPerMove) {
+    // Apply oil speed modifier - lower ticksPerMove = faster movement
+    const oilModifier = this.mg.config().oilSpeedModifier(this.attacker.oil());
+    const adjustedTicksPerMove = Math.max(1, Math.floor(this.ticksPerMove / oilModifier));
+
+    if (ticks - this.lastMove < adjustedTicksPerMove) {
       return;
     }
     this.lastMove = ticks;
