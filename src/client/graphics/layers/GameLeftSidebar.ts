@@ -107,19 +107,34 @@ export class GameLeftSidebar extends LitElement implements Layer {
   }
 
   private toggleMarket(): void {
-    this.isMarketShow = !this.isMarketShow;
+    const newState = !this.isMarketShow;
+    this.closeAllEconomicPanels();
+    this.isMarketShow = newState;
   }
 
   private toggleStockMarket(): void {
-    this.isStockMarketShow = !this.isStockMarketShow;
+    const newState = !this.isStockMarketShow;
+    this.closeAllEconomicPanels();
+    this.isStockMarketShow = newState;
   }
 
   private toggleContracts(): void {
-    this.isContractsShow = !this.isContractsShow;
+    const newState = !this.isContractsShow;
+    this.closeAllEconomicPanels();
+    this.isContractsShow = newState;
   }
 
   private toggleCentralBank(): void {
-    this.isCentralBankShow = !this.isCentralBankShow;
+    const newState = !this.isCentralBankShow;
+    this.closeAllEconomicPanels();
+    this.isCentralBankShow = newState;
+  }
+
+  private closeAllEconomicPanels(): void {
+    this.isMarketShow = false;
+    this.isStockMarketShow = false;
+    this.isContractsShow = false;
+    this.isCentralBankShow = false;
   }
 
   private get isTeamGame(): boolean {
