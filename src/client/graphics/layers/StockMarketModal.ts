@@ -41,7 +41,33 @@ export class StockMarketModal extends LitElement {
       queueMicrotask(() =>
         (this.querySelector('[role="dialog"]') as HTMLElement | null)?.focus(),
       );
+      this.loadInvestmentData();
     }
+  }
+
+  private loadInvestmentData() {
+    if (!this.gameView || !this.myPlayer) {
+      return;
+    }
+
+    const investments = this.gameView.investments();
+    this.investments = investments
+      .filter((inv: any) => inv.investorID === this.myPlayer?.id())
+      .map((inv: any) => {
+        const targetPlayer = this.gameView?.playerByID(inv.targetID);
+        return {
+          id: inv.id,
+          investorID: inv.investorID,
+          targetID: inv.targetID,
+          targetName: targetPlayer?.name() || "Unknown",
+          principal: inv.principal,
+          currentValue: inv.currentValue,
+          returns: inv.currentValue - inv.principal,
+          returnPercent: inv.principal > 0n
+            ? (Number((inv.currentValue - inv.principal) * 100n) / Number(inv.principal))
+            : 0,
+        };
+      });
   }
 
   private closeModal() {

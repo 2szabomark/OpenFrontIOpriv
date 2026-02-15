@@ -38,7 +38,37 @@ export class CentralBankModal extends LitElement {
       queueMicrotask(() =>
         (this.querySelector('[role="dialog"]') as HTMLElement | null)?.focus(),
       );
+      this.loadLoanData();
     }
+  }
+
+  private loadLoanData() {
+    if (!this.gameView || !this.myPlayer) {
+      return;
+    }
+
+    const loans = this.gameView.loans();
+
+    // Find bank info
+    const bankInfo = loans.find((item: any) => item.bankInfo !== undefined)?.bankInfo;
+    if (bankInfo) {
+      this.currentInterestRate = bankInfo.interestRate || 0.05;
+      this.maxLoanAmount = bankInfo.maxLoanAmount || 10000n;
+    }
+
+    // Load player's loans
+    this.loans = loans
+      .filter((loan: any) => loan.borrowerID === this.myPlayer?.id())
+      .map((loan: any) => ({
+        id: loan.id,
+        borrowerID: loan.borrowerID,
+        principal: loan.principal,
+        remainingBalance: loan.remainingBalance,
+        interestRate: loan.interestRate,
+        createdAtTick: loan.createdAtTick,
+        missedPayments: loan.missedPayments,
+        isDefaulted: loan.missedPayments >= 5,
+      }));
   }
 
   private closeModal() {

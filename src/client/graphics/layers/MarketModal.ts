@@ -38,6 +38,26 @@ export class MarketModal extends LitElement {
       queueMicrotask(() =>
         (this.querySelector('[role="dialog"]') as HTMLElement | null)?.focus(),
       );
+      this.loadMarketData();
+    }
+  }
+
+  private loadMarketData() {
+    if (!this.gameView) {
+      return;
+    }
+
+    const marketPrices = this.gameView.marketPrices();
+    this.prices = marketPrices.map((price) => ({
+      resource: price.resource,
+      price: price.price,
+      supply: price.supply,
+      demand: price.demand,
+    }));
+
+    const marketEvent = this.gameView.marketEvent();
+    if (marketEvent) {
+      this.lastEvent = marketEvent;
     }
   }
 

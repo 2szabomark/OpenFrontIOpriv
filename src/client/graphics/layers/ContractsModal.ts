@@ -52,7 +52,41 @@ export class ContractsModal extends LitElement {
       queueMicrotask(() =>
         (this.querySelector('[role="dialog"]') as HTMLElement | null)?.focus(),
       );
+      this.loadContractData();
     }
+  }
+
+  private loadContractData() {
+    if (!this.gameView || !this.myPlayer) {
+      return;
+    }
+
+    const contracts = this.gameView.contracts();
+    const currentTick = this.gameView.ticks();
+
+    this.contracts = contracts
+      .filter((contract: any) =>
+        contract.party1ID === this.myPlayer?.id() ||
+        contract.party2ID === this.myPlayer?.id()
+      )
+      .map((contract: any) => {
+        const party1Player = this.gameView?.playerByID(contract.party1ID);
+        const party2Player = this.gameView?.playerByID(contract.party2ID);
+        return {
+          id: contract.id,
+          party1ID: contract.party1ID,
+          party2ID: contract.party2ID,
+          party1Name: party1Player?.name() || "Unknown",
+          party2Name: party2Player?.name() || "Unknown",
+          contractType: contract.contractType,
+          createdAtTick: contract.createdAtTick,
+          expiresAtTick: contract.expiresAtTick,
+          upfrontPayment: contract.upfrontPayment,
+          periodicPayment: contract.periodicPayment,
+          periodicPaymentInterval: contract.periodicPaymentInterval,
+          isActive: currentTick < contract.expiresAtTick,
+        };
+      });
   }
 
   private closeModal() {

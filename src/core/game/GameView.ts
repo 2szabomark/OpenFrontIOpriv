@@ -607,6 +607,13 @@ export class GameView implements GameMap {
 
   private _map: GameMap;
 
+  // Economic data
+  private _marketPrices: Array<{ resource: string; price: number; supply: number; demand: number }> = [];
+  private _marketEvent: { resource: string; eventType: string; multiplier: number } | null = null;
+  private _investments: Array<any> = [];
+  private _contracts: Array<any> = [];
+  private _loans: Array<any> = [];
+
   constructor(
     public worker: WorkerClient,
     private _config: Config,
@@ -643,6 +650,26 @@ export class GameView implements GameMap {
 
   public updatesSinceLastTick(): GameUpdates | null {
     return this.lastUpdate?.updates ?? null;
+  }
+
+  public marketPrices(): Array<{ resource: string; price: number; supply: number; demand: number }> {
+    return this._marketPrices;
+  }
+
+  public marketEvent(): { resource: string; eventType: string; multiplier: number } | null {
+    return this._marketEvent;
+  }
+
+  public investments(): Array<any> {
+    return this._investments;
+  }
+
+  public contracts(): Array<any> {
+    return this._contracts;
+  }
+
+  public loans(): Array<any> {
+    return this._loans;
   }
 
   public update(gu: GameUpdateViewData) {
@@ -706,6 +733,32 @@ export class GameView implements GameMap {
         this.toDelete.add(unit.id());
       }
     });
+
+    // Process economic updates
+    if (gu.updates[GameUpdateType.MarketUpdate]) {
+      gu.updates[GameUpdateType.MarketUpdate].forEach((update: any) => {
+        this._marketPrices = update.prices || [];
+        this._marketEvent = update.lastEvent || null;
+      });
+    }
+
+    if (gu.updates[GameUpdateType.InvestmentUpdate]) {
+      gu.updates[GameUpdateType.InvestmentUpdate].forEach((update: any) => {
+        this._investments = update.investments || [];
+      });
+    }
+
+    if (gu.updates[GameUpdateType.ContractUpdate]) {
+      gu.updates[GameUpdateType.ContractUpdate].forEach((update: any) => {
+        this._contracts = update.contracts || [];
+      });
+    }
+
+    if (gu.updates[GameUpdateType.LoanUpdate]) {
+      gu.updates[GameUpdateType.LoanUpdate].forEach((update: any) => {
+        this._loans = update.loans || [];
+      });
+    }
   }
 
   recentlyUpdatedTiles(): TileRef[] {
