@@ -306,25 +306,25 @@ export class GameLeftSidebar extends LitElement implements Layer {
         <market-modal
           .visible=${this.isMarketShow}
           .eventBus=${this.eventBus}
-          .myPlayer=${this.game.myPlayer()}
+          .myPlayer=${this.game?.myPlayer()}
           .gameView=${this.game}
         ></market-modal>
         <stock-market-modal
           .visible=${this.isStockMarketShow}
           .eventBus=${this.eventBus}
-          .myPlayer=${this.game.myPlayer()}
+          .myPlayer=${this.game?.myPlayer()}
           .gameView=${this.game}
         ></stock-market-modal>
         <contracts-modal
           .visible=${this.isContractsShow}
           .eventBus=${this.eventBus}
-          .myPlayer=${this.game.myPlayer()}
+          .myPlayer=${this.game?.myPlayer()}
           .gameView=${this.game}
         ></contracts-modal>
         <central-bank-modal
           .visible=${this.isCentralBankShow}
           .eventBus=${this.eventBus}
-          .myPlayer=${this.game.myPlayer()}
+          .myPlayer=${this.game?.myPlayer()}
           .gameView=${this.game}
         ></central-bank-modal>
       </aside>
