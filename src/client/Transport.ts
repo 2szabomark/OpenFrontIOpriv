@@ -178,6 +178,48 @@ export class SendUpdateGameConfigIntentEvent implements GameEvent {
   constructor(public readonly config: Partial<GameConfig>) {}
 }
 
+export class SendBuyResourceIntentEvent implements GameEvent {
+  constructor(
+    public readonly resource: string,
+    public readonly amount: number,
+  ) {}
+}
+
+export class SendSellResourceIntentEvent implements GameEvent {
+  constructor(
+    public readonly resource: string,
+    public readonly amount: number,
+  ) {}
+}
+
+export class SendInvestIntentEvent implements GameEvent {
+  constructor(
+    public readonly targetID: PlayerID,
+    public readonly amount: number,
+  ) {}
+}
+
+export class SendLiquidateInvestmentIntentEvent implements GameEvent {
+  constructor(public readonly investmentID: number) {}
+}
+
+export class SendCreateContractIntentEvent implements GameEvent {
+  constructor(
+    public readonly party2ID: PlayerID,
+    public readonly contractType: string,
+    public readonly duration: number,
+    public readonly upfrontPayment: number,
+    public readonly periodicPayment: number,
+    public readonly periodicPaymentInterval: number,
+    public readonly resourceType?: string,
+    public readonly resourceAmount?: number,
+  ) {}
+}
+
+export class SendRequestLoanIntentEvent implements GameEvent {
+  constructor(public readonly amount: number) {}
+}
+
 export class Transport {
   private socket: WebSocket | null = null;
 
@@ -266,6 +308,25 @@ export class Transport {
 
     this.eventBus.on(SendUpdateGameConfigIntentEvent, (e) =>
       this.onSendUpdateGameConfigIntent(e),
+    );
+
+    this.eventBus.on(SendBuyResourceIntentEvent, (e) =>
+      this.onSendBuyResourceIntent(e),
+    );
+    this.eventBus.on(SendSellResourceIntentEvent, (e) =>
+      this.onSendSellResourceIntent(e),
+    );
+    this.eventBus.on(SendInvestIntentEvent, (e) =>
+      this.onSendInvestIntent(e),
+    );
+    this.eventBus.on(SendLiquidateInvestmentIntentEvent, (e) =>
+      this.onSendLiquidateInvestmentIntent(e),
+    );
+    this.eventBus.on(SendCreateContractIntentEvent, (e) =>
+      this.onSendCreateContractIntent(e),
+    );
+    this.eventBus.on(SendRequestLoanIntentEvent, (e) =>
+      this.onSendRequestLoanIntent(e),
     );
   }
 
@@ -646,6 +707,58 @@ export class Transport {
     this.sendIntent({
       type: "update_game_config",
       config: event.config,
+    });
+  }
+
+  private onSendBuyResourceIntent(event: SendBuyResourceIntentEvent) {
+    this.sendIntent({
+      type: "buy_resource",
+      resource: event.resource,
+      amount: event.amount,
+    });
+  }
+
+  private onSendSellResourceIntent(event: SendSellResourceIntentEvent) {
+    this.sendIntent({
+      type: "sell_resource",
+      resource: event.resource,
+      amount: event.amount,
+    });
+  }
+
+  private onSendInvestIntent(event: SendInvestIntentEvent) {
+    this.sendIntent({
+      type: "invest",
+      targetID: event.targetID,
+      amount: event.amount,
+    });
+  }
+
+  private onSendLiquidateInvestmentIntent(event: SendLiquidateInvestmentIntentEvent) {
+    this.sendIntent({
+      type: "liquidate_investment",
+      investmentID: event.investmentID,
+    });
+  }
+
+  private onSendCreateContractIntent(event: SendCreateContractIntentEvent) {
+    this.sendIntent({
+      type: "create_contract",
+      party2ID: event.party2ID,
+      contractType: event.contractType,
+      duration: event.duration,
+      upfrontPayment: event.upfrontPayment,
+      periodicPayment: event.periodicPayment,
+      periodicPaymentInterval: event.periodicPaymentInterval,
+      resourceType: event.resourceType,
+      resourceAmount: event.resourceAmount,
+    });
+  }
+
+  private onSendRequestLoanIntent(event: SendRequestLoanIntentEvent) {
+    this.sendIntent({
+      type: "request_loan",
+      amount: event.amount,
     });
   }
 
