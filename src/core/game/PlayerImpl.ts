@@ -71,6 +71,8 @@ export class PlayerImpl implements Player {
 
   private _gold: bigint;
   private _troops: bigint;
+  private _food: number = 0;
+  private _oil: number = 0;
 
   markedTraitorTick = -1;
   private _betrayalCount: number = 0;
@@ -141,6 +143,8 @@ export class PlayerImpl implements Player {
       tilesOwned: this.numTilesOwned(),
       gold: this._gold,
       troops: this.troops(),
+      food: this._food,
+      oil: this._oil,
       allies: this.alliances().map((a) => a.other(this).smallID()),
       embargoes: new Set([...this.embargoes.keys()].map((p) => p.toString())),
       isTraitor: this.isTraitor(),
@@ -876,6 +880,48 @@ export class PlayerImpl implements Player {
     const toRemove = minInt(this._troops, toInt(troops));
     this._troops -= toRemove;
     return Number(toRemove);
+  }
+
+  food(): number {
+    return this._food;
+  }
+
+  addFood(toAdd: number): void {
+    if (toAdd < 0) {
+      this.removeFood(-toAdd);
+      return;
+    }
+    this._food += toAdd;
+  }
+
+  removeFood(toRemove: number): number {
+    if (toRemove <= 0) {
+      return 0;
+    }
+    const actualRemoved = Math.min(this._food, toRemove);
+    this._food -= actualRemoved;
+    return actualRemoved;
+  }
+
+  oil(): number {
+    return this._oil;
+  }
+
+  addOil(toAdd: number): void {
+    if (toAdd < 0) {
+      this.removeOil(-toAdd);
+      return;
+    }
+    this._oil += toAdd;
+  }
+
+  removeOil(toRemove: number): number {
+    if (toRemove <= 0) {
+      return 0;
+    }
+    const actualRemoved = Math.min(this._oil, toRemove);
+    this._oil -= actualRemoved;
+    return actualRemoved;
   }
 
   captureUnit(unit: Unit): void {

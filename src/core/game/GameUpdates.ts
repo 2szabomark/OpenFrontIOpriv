@@ -1,10 +1,12 @@
 import { AllPlayersStats, ClientID, Winner } from "../Schemas";
 import {
   EmojiMessage,
+  Food,
   GameUpdates,
   Gold,
   MessageType,
   NameViewData,
+  Oil,
   PlayerID,
   PlayerType,
   Team,
@@ -165,6 +167,8 @@ export interface PlayerUpdate {
   tilesOwned: number;
   gold: Gold;
   troops: number;
+  food: number;
+  oil: number;
   allies: number[];
   embargoes: Set<PlayerID>;
   isTraitor: boolean;

@@ -191,6 +191,14 @@ export class DefaultConfig implements Config {
     return 250_000;
   }
 
+  farmFoodGeneration(): number {
+    return 1.0; // Base food generation per tick per farm
+  }
+
+  oilRigOilGeneration(): number {
+    return 1.0; // Base oil generation per tick per oil rig
+  }
+
   falloutDefenseModifier(falloutRatio: number): number {
     // falloutRatio is between 0 and 1
     // So defense modifier is between [5, 2.5]
@@ -470,6 +478,26 @@ export class DefaultConfig implements Config {
           cost: () => 0n,
           territoryBound: false,
           experimental: true,
+        };
+      case UnitType.Farm:
+        return {
+          cost: this.costWrapper(
+            (numUnits: number) => Math.min(500_000, (numUnits + 1) * 100_000),
+            UnitType.Farm,
+          ),
+          territoryBound: false, // Farms stay when conquered
+          constructionDuration: this.instantBuild() ? 0 : 3 * 10,
+          upgradable: true,
+        };
+      case UnitType.OilRig:
+        return {
+          cost: this.costWrapper(
+            (numUnits: number) => Math.min(750_000, (numUnits + 1) * 150_000),
+            UnitType.OilRig,
+          ),
+          territoryBound: false, // Oil rigs stay when conquered
+          constructionDuration: this.instantBuild() ? 0 : 4 * 10,
+          upgradable: true,
         };
       default:
         assertNever(type);

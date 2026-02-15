@@ -24,6 +24,8 @@ function isEnumValue<T extends Record<string, string | number>>(
 export type PlayerID = string;
 export type Tick = number;
 export type Gold = bigint;
+export type Food = number;
+export type Oil = number;
 
 export const AllPlayers = "AllPlayers" as const;
 
@@ -252,6 +254,8 @@ export enum UnitType {
   MIRVWarhead = "MIRV Warhead",
   Train = "Train",
   Factory = "Factory",
+  Farm = "Farm",
+  OilRig = "Oil Rig",
 }
 
 export enum TrainType {
@@ -267,6 +271,8 @@ const _structureTypes: ReadonlySet<UnitType> = new Set([
   UnitType.MissileSilo,
   UnitType.Port,
   UnitType.Factory,
+  UnitType.Farm,
+  UnitType.OilRig,
 ]);
 
 export const StructureTypes: readonly UnitType[] = [..._structureTypes];
@@ -337,6 +343,10 @@ export interface UnitParamsMap {
   [UnitType.MIRVWarhead]: {
     targetTile?: number;
   };
+
+  [UnitType.Farm]: Record<string, never>;
+
+  [UnitType.OilRig]: Record<string, never>;
 }
 
 // Type helper to get params type for a specific unit type
@@ -617,6 +627,12 @@ export interface Player {
   gold(): Gold;
   addGold(toAdd: Gold, tile?: TileRef): void;
   removeGold(toRemove: Gold): Gold;
+  food(): Food;
+  addFood(toAdd: Food): void;
+  removeFood(toRemove: Food): Food;
+  oil(): Oil;
+  addOil(toAdd: Oil): void;
+  removeOil(toRemove: Oil): Oil;
   troops(): number;
   setTroops(troops: number): void;
   addTroops(troops: number): void;

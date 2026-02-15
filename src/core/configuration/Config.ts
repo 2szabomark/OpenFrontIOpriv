@@ -107,6 +107,8 @@ export interface Config {
   proximityBonusPortsNb(totalPorts: number): number;
   maxTroops(player: Player | PlayerView): number;
   cityTroopIncrease(): number;
+  farmFoodGeneration(): number;
+  oilRigOilGeneration(): number;
   boatAttackAmount(attacker: Player, defender: Player | TerraNullius): number;
   shellLifetime(): number;
   boatMaxNumber(): number;
