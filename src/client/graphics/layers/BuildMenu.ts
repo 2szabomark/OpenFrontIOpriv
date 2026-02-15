@@ -124,6 +124,13 @@ export const buildTable: BuildItemDisplay[][] = [
       key: "unit_type.farm",
       countable: true,
     },
+    {
+      unitType: UnitType.OilRig,
+      icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E🛢️%3C/text%3E%3C/svg%3E",
+      description: "build_menu.desc.oil_rig",
+      key: "unit_type.oil_rig",
+      countable: true,
+    },
   ],
 ];
 
