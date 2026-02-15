@@ -99,38 +99,51 @@ export class GameLeftSidebar extends LitElement implements Layer {
   }
 
   private toggleLeaderboard(): void {
+    console.error("🎯 toggleLeaderboard called, current state:", this.isLeaderboardShow);
     this.isLeaderboardShow = !this.isLeaderboardShow;
+    console.error("🎯 toggleLeaderboard new state:", this.isLeaderboardShow);
   }
 
   private toggleTeamLeaderboard(): void {
+    console.error("🎯 toggleTeamLeaderboard called, current state:", this.isTeamLeaderboardShow);
     this.isTeamLeaderboardShow = !this.isTeamLeaderboardShow;
+    console.error("🎯 toggleTeamLeaderboard new state:", this.isTeamLeaderboardShow);
   }
 
   private toggleMarket(): void {
+    console.error("🏪 toggleMarket called, current state:", this.isMarketShow);
     const newState = !this.isMarketShow;
     this.closeAllEconomicPanels();
     this.isMarketShow = newState;
+    console.error("🏪 toggleMarket new state:", this.isMarketShow);
   }
 
   private toggleStockMarket(): void {
+    console.error("📈 toggleStockMarket called, current state:", this.isStockMarketShow);
     const newState = !this.isStockMarketShow;
     this.closeAllEconomicPanels();
     this.isStockMarketShow = newState;
+    console.error("📈 toggleStockMarket new state:", this.isStockMarketShow);
   }
 
   private toggleContracts(): void {
+    console.error("📝 toggleContracts called, current state:", this.isContractsShow);
     const newState = !this.isContractsShow;
     this.closeAllEconomicPanels();
     this.isContractsShow = newState;
+    console.error("📝 toggleContracts new state:", this.isContractsShow);
   }
 
   private toggleCentralBank(): void {
+    console.error("🏦 toggleCentralBank called, current state:", this.isCentralBankShow);
     const newState = !this.isCentralBankShow;
     this.closeAllEconomicPanels();
     this.isCentralBankShow = newState;
+    console.error("🏦 toggleCentralBank new state:", this.isCentralBankShow);
   }
 
   private closeAllEconomicPanels(): void {
+    console.error("🔒 Closing all economic panels");
     this.isMarketShow = false;
     this.isStockMarketShow = false;
     this.isContractsShow = false;
@@ -213,7 +226,10 @@ export class GameLeftSidebar extends LitElement implements Layer {
           <!-- Market Button -->
           <div
             class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
-            @click=${this.toggleMarket}
+            @click=${(e: Event) => {
+              console.error("🖱️ Market icon clicked! Event:", e.type, "Target:", e.target);
+              this.toggleMarket();
+            }}
             role="button"
             tabindex="0"
             title="Market"
@@ -223,7 +239,10 @@ export class GameLeftSidebar extends LitElement implements Layer {
           <!-- Stock Market Button -->
           <div
             class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
-            @click=${this.toggleStockMarket}
+            @click=${(e: Event) => {
+              console.error("🖱️ Stock Market icon clicked! Event:", e.type, "Target:", e.target);
+              this.toggleStockMarket();
+            }}
             role="button"
             tabindex="0"
             title="Stock Market"
@@ -233,7 +252,10 @@ export class GameLeftSidebar extends LitElement implements Layer {
           <!-- Contracts Button -->
           <div
             class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
-            @click=${this.toggleContracts}
+            @click=${(e: Event) => {
+              console.error("🖱️ Contracts icon clicked! Event:", e.type, "Target:", e.target);
+              this.toggleContracts();
+            }}
             role="button"
             tabindex="0"
             title="Contracts"
@@ -243,7 +265,10 @@ export class GameLeftSidebar extends LitElement implements Layer {
           <!-- Central Bank Button -->
           <div
             class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
-            @click=${this.toggleCentralBank}
+            @click=${(e: Event) => {
+              console.error("🖱️ Central Bank icon clicked! Event:", e.type, "Target:", e.target);
+              this.toggleCentralBank();
+            }}
             role="button"
             tabindex="0"
             title="Central Bank"
