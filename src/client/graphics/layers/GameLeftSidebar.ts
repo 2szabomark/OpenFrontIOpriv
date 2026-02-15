@@ -262,34 +262,30 @@ export class GameLeftSidebar extends LitElement implements Layer {
           ></team-stats>
         </div>
         <slot></slot>
-        <!-- Economic Modals -->
+        <!-- Economic Panels -->
         <market-modal
-          .open=${this.isMarketShow}
+          .visible=${this.isMarketShow}
           .eventBus=${this.eventBus}
           .myPlayer=${this.game.myPlayer()}
           .gameView=${this.game}
-          @close=${() => (this.isMarketShow = false)}
         ></market-modal>
         <stock-market-modal
-          .open=${this.isStockMarketShow}
+          .visible=${this.isStockMarketShow}
           .eventBus=${this.eventBus}
           .myPlayer=${this.game.myPlayer()}
           .gameView=${this.game}
-          @close=${() => (this.isStockMarketShow = false)}
         ></stock-market-modal>
         <contracts-modal
-          .open=${this.isContractsShow}
+          .visible=${this.isContractsShow}
           .eventBus=${this.eventBus}
           .myPlayer=${this.game.myPlayer()}
           .gameView=${this.game}
-          @close=${() => (this.isContractsShow = false)}
         ></contracts-modal>
         <central-bank-modal
-          .open=${this.isCentralBankShow}
+          .visible=${this.isCentralBankShow}
           .eventBus=${this.eventBus}
           .myPlayer=${this.game.myPlayer()}
           .gameView=${this.game}
-          @close=${() => (this.isCentralBankShow = false)}
         ></central-bank-modal>
       </aside>
     `;

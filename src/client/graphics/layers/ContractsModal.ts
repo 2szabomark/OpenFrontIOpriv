@@ -24,7 +24,7 @@ interface ContractDisplay {
 @customElement("contracts-modal")
 export class ContractsModal extends LitElement {
   @property({ attribute: false }) eventBus: EventBus | null = null;
-  @property({ type: Boolean }) open: boolean = false;
+  @property({ type: Boolean }) visible: boolean = false;
   @property({ attribute: false }) myPlayer: PlayerView | null = null;
   @property({ attribute: false }) gameView: GameView | null = null;
 
@@ -47,11 +47,8 @@ export class ContractsModal extends LitElement {
     return this;
   }
 
-  updated(changed: Map<string, unknown>) {
-    if (changed.has("open") && this.open) {
-      queueMicrotask(() =>
-        (this.querySelector('[role="dialog"]') as HTMLElement | null)?.focus(),
-      );
+  willUpdate(changed: Map<string, unknown>) {
+    if (changed.has("visible") && this.visible) {
       this.loadContractData();
     }
   }
@@ -89,10 +86,6 @@ export class ContractsModal extends LitElement {
       });
   }
 
-  private closeModal() {
-    this.dispatchEvent(new CustomEvent("close"));
-  }
-
   private createContract() {
     if (!this.eventBus || !this.selectedPlayerID || this.duration <= 0) {
       return;
@@ -107,23 +100,14 @@ export class ContractsModal extends LitElement {
         this.periodicInterval,
       ),
     );
-    this.closeModal();
   }
 
   private renderHeader() {
     return html`
-      <div class="mb-4 flex items-center justify-between relative">
-        <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
-          ${translateText("contracts.title")}
-        </h2>
-        <button
-          type="button"
-          @click=${() => this.closeModal()}
-          class="absolute -top-3 -right-3 flex h-7 w-7 items-center justify-center rounded-full bg-zinc-700 text-white shadow-sm hover:bg-red-500 transition-colors focus-visible:ring-2 focus-visible:ring-white/30 focus:outline-hidden"
-          aria-label=${translateText("common.close")}
-        >
-          ✕
-        </button>
+      <div class="mb-2 flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-zinc-100">
+          📝 ${translateText("contracts.title")}
+        </h3>
       </div>
     `;
   }
@@ -317,25 +301,15 @@ export class ContractsModal extends LitElement {
   }
 
   render() {
-    if (!this.open) return html``;
+    if (!this.visible) return html``;
 
     return html`
       <div
-        class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 backdrop-blur-sm"
-        @click=${(e: MouseEvent) => {
-          if (e.target === e.currentTarget) this.closeModal();
-        }}
+        class="mt-2 max-h-[60vh] overflow-y-auto text-white bg-gray-800/85 rounded-lg p-3 border border-slate-500"
+        @contextmenu=${(e: Event) => e.preventDefault()}
       >
-        <div
-          role="dialog"
-          tabindex="-1"
-          aria-labelledby="contracts-title"
-          class="relative w-full max-w-lg max-h-[80vh] overflow-y-auto bg-zinc-900 rounded-lg shadow-xl p-6 border border-zinc-700"
-          @click=${(e: MouseEvent) => e.stopPropagation()}
-        >
-          ${this.renderHeader()} ${this.renderContracts()}
-          ${this.renderCreateContract()}
-        </div>
+        ${this.renderHeader()} ${this.renderContracts()}
+        ${this.renderCreateContract()}
       </div>
     `;
   }
