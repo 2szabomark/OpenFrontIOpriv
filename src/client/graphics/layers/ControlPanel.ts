@@ -38,6 +38,12 @@ export class ControlPanel extends LitElement implements Layer {
   private _gold: Gold;
 
   @state()
+  private _food: number = 0;
+
+  @state()
+  private _oil: number = 0;
+
+  @state()
   private _attackingTroops: number = 0;
 
   @state()
@@ -92,6 +98,8 @@ export class ControlPanel extends LitElement implements Layer {
 
     this._maxTroops = this.game.config().maxTroops(player);
     this._gold = player.gold();
+    this._food = player.food();
+    this._oil = player.oil();
     this._troops = player.troops();
     this._attackingTroops = player
       .outgoingAttacks()
@@ -265,10 +273,10 @@ export class ControlPanel extends LitElement implements Layer {
           : "hidden"}"
         @contextmenu=${(e: MouseEvent) => e.preventDefault()}
       >
-        <div class="flex gap-2 lg:gap-3 items-center">
-          <!-- Gold: 1/4 -->
+        <div class="flex gap-2 lg:gap-3 items-center flex-wrap">
+          <!-- Gold -->
           <div
-            class="flex items-center justify-center p-1 lg:p-1.5 lg:gap-1 border rounded-md border-yellow-400 font-bold text-yellow-400 text-xs lg:text-sm w-1/5 lg:w-auto shrink-0"
+            class="flex items-center justify-center p-1 lg:p-1.5 lg:gap-1 border rounded-md border-yellow-400 font-bold text-yellow-400 text-xs lg:text-sm shrink-0"
             translate="no"
           >
             <img
@@ -279,7 +287,25 @@ export class ControlPanel extends LitElement implements Layer {
             />
             <span class="px-0.5">${renderNumber(this._gold)}</span>
           </div>
-          <!-- Troop bar: 2/4 -->
+          <!-- Food -->
+          <div
+            class="flex items-center justify-center p-1 lg:p-1.5 lg:gap-1 border rounded-md border-green-400 font-bold text-green-400 text-xs lg:text-sm shrink-0"
+            translate="no"
+            title="Food (${this._food})"
+          >
+            <span class="text-base lg:text-lg">🌾</span>
+            <span class="px-0.5">${renderNumber(this._food)}</span>
+          </div>
+          <!-- Oil -->
+          <div
+            class="flex items-center justify-center p-1 lg:p-1.5 lg:gap-1 border rounded-md border-blue-400 font-bold text-blue-400 text-xs lg:text-sm shrink-0"
+            translate="no"
+            title="Oil (${this._oil})"
+          >
+            <span class="text-base lg:text-lg">🛢️</span>
+            <span class="px-0.5">${renderNumber(this._oil)}</span>
+          </div>
+          <!-- Troop bar -->
           <div class="w-3/5 lg:flex-1">${this.renderTroopBar()}</div>
           <!-- Attack ratio: 1/4 -->
           <div
