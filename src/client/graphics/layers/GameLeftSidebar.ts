@@ -8,6 +8,10 @@ import { translateText } from "../../Utils";
 import { ImmunityBarVisibleEvent } from "./ImmunityTimer";
 import { Layer } from "./Layer";
 import { SpawnBarVisibleEvent } from "./SpawnTimer";
+import "./MarketModal";
+import "./StockMarketModal";
+import "./ContractsModal";
+import "./CentralBankModal";
 import leaderboardRegularIcon from "/images/LeaderboardIconRegularWhite.svg?url";
 import leaderboardSolidIcon from "/images/LeaderboardIconSolidWhite.svg?url";
 import teamRegularIcon from "/images/TeamIconRegularWhite.svg?url";
@@ -19,6 +23,14 @@ export class GameLeftSidebar extends LitElement implements Layer {
   private isLeaderboardShow = false;
   @state()
   private isTeamLeaderboardShow = false;
+  @state()
+  private isMarketShow = false;
+  @state()
+  private isStockMarketShow = false;
+  @state()
+  private isContractsShow = false;
+  @state()
+  private isCentralBankShow = false;
   @state()
   private isVisible = false;
   @state()
@@ -94,6 +106,22 @@ export class GameLeftSidebar extends LitElement implements Layer {
     this.isTeamLeaderboardShow = !this.isTeamLeaderboardShow;
   }
 
+  private toggleMarket(): void {
+    this.isMarketShow = !this.isMarketShow;
+  }
+
+  private toggleStockMarket(): void {
+    this.isStockMarketShow = !this.isStockMarketShow;
+  }
+
+  private toggleContracts(): void {
+    this.isContractsShow = !this.isContractsShow;
+  }
+
+  private toggleCentralBank(): void {
+    this.isCentralBankShow = !this.isCentralBankShow;
+  }
+
   private get isTeamGame(): boolean {
     return this.game?.config().gameConfig().gameMode === GameMode.Team;
   }
@@ -167,6 +195,46 @@ export class GameLeftSidebar extends LitElement implements Layer {
                 </div>
               `
             : null}
+          <!-- Market Button -->
+          <div
+            class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
+            @click=${this.toggleMarket}
+            role="button"
+            tabindex="0"
+            title="Market"
+          >
+            <span class="text-lg">🏪</span>
+          </div>
+          <!-- Stock Market Button -->
+          <div
+            class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
+            @click=${this.toggleStockMarket}
+            role="button"
+            tabindex="0"
+            title="Stock Market"
+          >
+            <span class="text-lg">📈</span>
+          </div>
+          <!-- Contracts Button -->
+          <div
+            class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
+            @click=${this.toggleContracts}
+            role="button"
+            tabindex="0"
+            title="Contracts"
+          >
+            <span class="text-lg">📝</span>
+          </div>
+          <!-- Central Bank Button -->
+          <div
+            class="cursor-pointer p-1 bg-gray-700/50 hover:bg-gray-600 border rounded-md border-slate-500 transition-colors"
+            @click=${this.toggleCentralBank}
+            role="button"
+            tabindex="0"
+            title="Central Bank"
+          >
+            <span class="text-lg">🏦</span>
+          </div>
         </div>
         ${this.isPlayerTeamLabelVisible
           ? html`
@@ -194,6 +262,35 @@ export class GameLeftSidebar extends LitElement implements Layer {
           ></team-stats>
         </div>
         <slot></slot>
+        <!-- Economic Modals -->
+        <market-modal
+          .open=${this.isMarketShow}
+          .eventBus=${this.eventBus}
+          .myPlayer=${this.game.myPlayer()}
+          .gameView=${this.game}
+          @close=${() => (this.isMarketShow = false)}
+        ></market-modal>
+        <stock-market-modal
+          .open=${this.isStockMarketShow}
+          .eventBus=${this.eventBus}
+          .myPlayer=${this.game.myPlayer()}
+          .gameView=${this.game}
+          @close=${() => (this.isStockMarketShow = false)}
+        ></stock-market-modal>
+        <contracts-modal
+          .open=${this.isContractsShow}
+          .eventBus=${this.eventBus}
+          .myPlayer=${this.game.myPlayer()}
+          .gameView=${this.game}
+          @close=${() => (this.isContractsShow = false)}
+        ></contracts-modal>
+        <central-bank-modal
+          .open=${this.isCentralBankShow}
+          .eventBus=${this.eventBus}
+          .myPlayer=${this.game.myPlayer()}
+          .gameView=${this.game}
+          @close=${() => (this.isCentralBankShow = false)}
+        ></central-bank-modal>
       </aside>
     `;
   }
