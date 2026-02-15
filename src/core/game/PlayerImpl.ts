@@ -1088,9 +1088,14 @@ export class PlayerImpl implements Player {
       case UnitType.SAMLauncher:
       case UnitType.City:
       case UnitType.Factory:
+        return this.landBasedStructureSpawn(targetTile, validTiles);
       case UnitType.Farm:
       case UnitType.OilRig:
-        return this.landBasedStructureSpawn(targetTile, validTiles);
+        // Farm and OilRig are not territoryBound, so they use simpler spawn logic
+        if (this.mg.owner(targetTile) !== this) {
+          return false;
+        }
+        return this.landBasedUnitSpawn(targetTile);
       default:
         assertNever(unitType);
     }
